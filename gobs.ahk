@@ -47,8 +47,9 @@ Gob1:
     TF_ReplaceLine("GobCount.txt", 1,1, count1)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Gob2:
 {
     count2:=TF_ReadLines("GobCount.txt",2,2)
@@ -59,8 +60,9 @@ Gob2:
     TF_ReplaceLine("GobCount.txt", 2,2, count2)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Gob3:
 {
     count3:=TF_ReadLines("GobCount.txt",3,3)
@@ -71,8 +73,9 @@ Gob3:
     TF_ReplaceLine("GobCount.txt", 3,3, count3)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Gob4:
 {
     count4:=TF_ReadLines("GobCount.txt",4,4)
@@ -83,8 +86,9 @@ Gob4:
     TF_ReplaceLine("GobCount.txt", 4,4, count4)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Gob5:
 {
     count5:=TF_ReadLines("GobCount.txt",5,5)
@@ -95,8 +99,9 @@ Gob5:
     TF_ReplaceLine("GobCount.txt", 5,5, count5)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Gob6:
 {
     count6:=TF_ReadLines("GobCount.txt",6,6)
@@ -119,8 +124,9 @@ Gob7:
     TF_ReplaceLine("GobCount.txt", 7,7, count7)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Gob8:
 {
     count8:=TF_ReadLines("GobCount.txt",8,8)
@@ -131,8 +137,9 @@ Gob8:
     TF_ReplaceLine("GobCount.txt", 8,8, count8)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Gob9:
 {
     count9:=TF_ReadLines("GobCount.txt",9,9)
@@ -143,8 +150,9 @@ Gob9:
     TF_ReplaceLine("GobCount.txt", 9,9, count9)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
+Return
+
 Run:
 {
     count10:=TF_ReadLines("GobCount.txt",10,10)
@@ -155,9 +163,8 @@ Run:
     TF_ReplaceLine("GobCount.txt", 10,10, count10)
     FileDelete, GobCount.txt
     FileMove, GobCount_copy.txt, GobCount.txt
-    return
 }
-
+Return
 ;------------------
 
 GuiClose:
