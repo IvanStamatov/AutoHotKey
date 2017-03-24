@@ -1,16 +1,65 @@
 ﻿#SingleInstance force
 #include tflibrary.ahk
-BalanceTime := 0
-ElapsedTime := A_YYYY
-path := "C:\Users\Stamy\Desktop\StudyTimer\studytime.txt"
-currentDate = %A_DD%/%A_MM%/%A_YYYY%
+
+; TODO
+; custom path saved in settings - DONE
+; tabs to display time by projects
+; save projects
+; set goals and notification when a goal is reached
+; LATER - countdown option
+; set a work time
+
+
+
+BalanceTime := 0    ;timestuff
+ElapsedTime := A_YYYY   ;time format
+currentDate = %A_DD%/%A_MM%/%A_YYYY% ;timestuff
+
+FileReadLine, path, settings.ini, 1 ;getting the path, /Study Time folder
+FileAppend, ,%path%\data.txt    ;creating file for storing data
+dataPath = %path%\data.txt  ;variable to hold the data file path
+projectPath = %path%\Projects
+;session checker, if in same session and same day replace time, if not add time
+;   session = % TF_ReadLines("settings.ini", 2,2)
+;   msgbox %session%
+;   TF_ReplaceLine("!settings.ini", 2,2, "open")
+;   desiredSessionState := open
+;   currentSessionState := session
+;Line2: open=1/0
+;TF_ReplaceLine("!settings.ini", 2,2, "open=1")
+FileReadLine,prjcts, projectNames.txt, 1
+
+
+
 GUI, FONT, S11
-GUI, +owner 
-Gui, Add, Button, x10 y20 w130 h40 vButtonStartStop gStartStop, Start
-Gui, Add, Button, x10 y70 w130 h40 vSaveButton gSave, Save
-Gui, Add, Button, x150 y70 w130 h40 vResetButton gReset, Reset
-Gui, Add, Text, x195 y30 w75 h20 vDisplayTime, 0:00:00
+;GUI, +owner
+Gui, Add, DropDownList, x10 y10 w170 vProjectList gOnSelectDDL, %prjcts% 
+Gui, Add, Button, x210 y10 w70 h25 gNewButton, New
+Gui, Add, Button, x10 y60 w130 h40 vButtonStartStop gStartStop, Start
+Gui, Add, Button, x10 y110 w130 h40 vSaveButton gSave, Save
+Gui, Add, Button, x150 y110 w130 h40 vResetButton gReset, Reset
+Gui, Add, Text, x195 y70 w75 h20 vDisplayTime, 0:00:00
 Gui, Show, AutoSize, Study Timer
+Return
+
+OnSelectDDL:
+{
+    Gui, Submit, nohide
+    currentProject := ProjectList
+    projectName = %ProjectList%.txt
+    projectpathpath = %projectPath%\%projectName%
+    Gosub, Reset
+
+}
+Return
+
+NewButton:
+{
+    InputBox, newProject, Create new project, , , 200, 100
+    GuiControl, , ProjectList, %newProject%|
+    FileAppend, %newProject%|, projectNames.txt
+    FileAppend, , %path%\Projects\%newProject%.txt
+}
 Return
 
 FormatSeconds(NumberOfSeconds)
@@ -59,20 +108,7 @@ Save:
         Return
     }
     
-    if (SaveButton = "Save")
-    {   
-        ; TODO: figure out how to keep the path after closing the program
-        ;ifNotExist, %path%
-        ;    FileSelectFile, savePath, S 24 , studytime.txt
-        ; save it in an .ini file?
-        
-        GuiControl, , SaveButton, Update
         Gosub, TimeLoop
-    }
-    Else
-    {
-        Gosub, TimeLoop
-    }
 }
 Return
 
@@ -89,11 +125,14 @@ Return
 TimeLoop:
 Loop
 {
-    numLineToDelete := % TF_Find(path, "", "", currentDate, 1, 0)   ; get index of line 
+    numLineToDelete := % TF_Find(projectpathpath, "", "", currentDate, 1, 0)
     If(numLineToDelete = 0)
-        break
-
-    lineString := % TF_ReadLines(path, numLineToDelete, numLineToDelete, 1)
+    {
+    FileAppend,%A_DD%/%A_MM%/%A_YYYY% - %DisplayTime%`n, %projectPath%\%projectName%
+    break
+    }
+    
+    lineString := % TF_ReadLines(projectpathpath, numLineToDelete, numLineToDelete, 1)
     StringMid, hours, lineString, 14, 1
     StringMid, minutes, lineString, 16, 2
     StringRight, seconds, lineString, 2
@@ -111,20 +150,22 @@ Loop
     totaltime := % totalSec + totalSec2
     totaltimeConverted := % FormatSeconds(totaltime)
 
-    tekst = %currentDate% - %totaltimeConverted%
+    timeFormatToSave = %currentDate% - %totaltimeConverted%
+    timeFormatToSaveDisplayTime = %currentDate% - %DisplayTime%
+    pathVar = !%projectpathpath%
+    
+    
+      
+       ; TF_ReplaceLine(pathVar, numLineToDelete, numLineToDelete, timeFormatToSaveDisplayTime)
 
-    TF_ReplaceLine(path, numLineToDelete, numLineToDelete, tekst) 
-    FileDelete, %path%
-    FileRead, tempFile, C:\Users\Stamy\Desktop\StudyTimer\studytime_copy.txt
-    FileAppend, %tempFile%, %path%
-    FileDelete, C:\Users\Stamy\Desktop\StudyTimer\studytime_copy.txt
-     msgbox end of loop
+        TF_ReplaceLine(pathVar, numLineToDelete, numLineToDelete, timeFormatToSave)
      return
 }
 return
 
 
-
 GuiClose:
-ExitApp
-
+{
+    TF_ReplaceLine("!settings.ini", 2,2, "closed")
+    ExitApp
+}
