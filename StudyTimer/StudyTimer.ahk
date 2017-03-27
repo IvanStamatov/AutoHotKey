@@ -1,38 +1,38 @@
 ﻿#SingleInstance force
-#include tflibrary.ahk
+#include STLibrary.ahk
 
-; TODO
+;----- TODO
 ; custom path saved in settings - DONE
-; tabs to display time by projects
-; save projects
+; tabs to display time saved by projects
+; save projects - DONE
 ; set goals and notification when a goal is reached
 ; LATER - countdown option
-; set a work time
+; Menu
+; Option to delete projects
+; Preselect last used project
+; 
 
 
 
+
+;----- Set up variable
 BalanceTime := 0    ;timestuff
 ElapsedTime := A_YYYY   ;time format
 currentDate = %A_DD%/%A_MM%/%A_YYYY% ;timestuff
 
 FileReadLine, path, settings.ini, 1 ;getting the path, /Study Time folder
-FileAppend, ,%path%\data.txt    ;creating file for storing data
-dataPath = %path%\data.txt  ;variable to hold the data file path
 projectPath = %path%\Projects
-;session checker, if in same session and same day replace time, if not add time
-;   session = % TF_ReadLines("settings.ini", 2,2)
-;   msgbox %session%
-;   TF_ReplaceLine("!settings.ini", 2,2, "open")
-;   desiredSessionState := open
-;   currentSessionState := session
-;Line2: open=1/0
-;TF_ReplaceLine("!settings.ini", 2,2, "open=1")
-FileReadLine,prjcts, projectNames.txt, 1
+FileReadLine,prjcts, Projects\_projectNames.ini, 1  ;get already created projects
+
+;Menu, HelpMenu, Add, &DOSOMETHING, HelpAbout  ;Create the sub-menus for the menu bar
+;Menu, MyMenuBar, Add, &Options, :HelpMenu  ;Create the menu bar by attaching the sub-menus to it
 
 
 
+;----- GUI:
 GUI, FONT, S11
-;GUI, +owner
+;Gui, Menu, MyMenuBar
+;GUI, +owner    ;minimizes to taskbar
 Gui, Add, DropDownList, x10 y10 w170 vProjectList gOnSelectDDL, %prjcts% 
 Gui, Add, Button, x210 y10 w70 h25 gNewButton, New
 Gui, Add, Button, x10 y60 w130 h40 vButtonStartStop gStartStop, Start
@@ -42,6 +42,8 @@ Gui, Add, Text, x195 y70 w75 h20 vDisplayTime, 0:00:00
 Gui, Show, AutoSize, Study Timer
 Return
 
+
+;----- Functions:
 OnSelectDDL:
 {
     Gui, Submit, nohide
@@ -57,7 +59,7 @@ NewButton:
 {
     InputBox, newProject, Create new project, , , 200, 100
     GuiControl, , ProjectList, %newProject%|
-    FileAppend, %newProject%|, projectNames.txt
+    FileAppend, %newProject%|, Projects\_projectNames.txt
     FileAppend, , %path%\Projects\%newProject%.txt
 }
 Return
@@ -104,10 +106,12 @@ Save:
 
     if(BalanceTime == 0)
     {
-        msgbox You have not started the timer!
+        msgbox You have not selected a project ot started the timer!
         Return
     }
-    
+    GuiControl, , SaveButton, Time saved!
+    sleep, 500
+    GuiControl, , SaveButton, Save
         Gosub, TimeLoop
 }
 Return
@@ -154,18 +158,30 @@ Loop
     timeFormatToSaveDisplayTime = %currentDate% - %DisplayTime%
     pathVar = !%projectpathpath%
     
-    
-      
-       ; TF_ReplaceLine(pathVar, numLineToDelete, numLineToDelete, timeFormatToSaveDisplayTime)
-
-        TF_ReplaceLine(pathVar, numLineToDelete, numLineToDelete, timeFormatToSave)
+    TF_ReplaceLine(pathVar, numLineToDelete, numLineToDelete, timeFormatToSave)
      return
 }
 return
 
+;----- code above are working correctly -------------------------------------------------------
+
+
+
+
+;HelpAbout:
+;{
+;
+;}
+;return
+
+
+
+
+
+
+
 
 GuiClose:
 {
-    TF_ReplaceLine("!settings.ini", 2,2, "closed")
     ExitApp
 }
