@@ -4,6 +4,18 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #SingleInstance, force
 
+
+;   Multiple columns?
+;   - maybe getting the index of all lines and then divide by rows?
+;   - better way to construct table
+;
+;
+;
+;
+;
+
+
+
 indexString :=
 mainArray := 
 firstRow :=
